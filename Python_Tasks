@@ -1,3 +1,179 @@
+TASK 1(CLI)
+
+print ("~~~~COMMAND LINE INTERFACE~~~~")
+
+import json
+from datetime import datetime
+
+# File to store tasks
+FILE_NAME = "tasks.json"
+
+def load_tasks():
+    try:
+        with open(FILE_NAME, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
+
+def save_tasks(tasks):
+    with open(FILE_NAME, 'w') as file:
+        json.dump(tasks, file, indent=4)
+
+def add_task(tasks):
+    title = input("Enter task title: ")
+    description = input("Enter task description: ")
+    due_date = input("Enter due date (YYYY-MM-DD) or press enter to skip: ")
+
+    task = {
+        "title": title,
+        "description": description,
+        "due_date": due_date if due_date else None,
+        "completed": False
+    }
+    tasks.append(task)
+    save_tasks(tasks)
+    print("Task added!")
+
+def view_tasks(tasks):
+    if not tasks:
+        print("No tasks to show.")
+        return
+
+    for i, task in enumerate(tasks, 1):
+        status = "Completed" if task['completed'] else "Incomplete"
+        due = f"Due: {task['due_date']}" if task['due_date'] else "No due date"
+        print(f"{i}. {task['title']} - {status} ({due})")
+
+def mark_complete(tasks):
+    view_tasks(tasks)
+    task_num = int(input("Enter task number to mark as complete: "))
+    tasks[task_num - 1]['completed'] = True
+    save_tasks(tasks)
+    print("Task marked as complete!")
+
+def delete_task(tasks):
+    view_tasks(tasks)
+    task_num = int(input("Enter task number to delete: "))
+    tasks.pop(task_num - 1)
+    save_tasks(tasks)
+    print("Task deleted!")
+
+def main():
+    tasks = load_tasks()
+
+    while True:
+        print("\n--- To-Do List Menu ---")
+        print("1. View Tasks")
+        print("2. Add Task")
+        print("3. Mark Task as Complete")
+        print("4. Delete Task")
+        print("5. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            view_tasks(tasks)
+        elif choice == "2":
+            add_task(tasks)
+        elif choice == "3":
+            mark_complete(tasks)
+        elif choice == "4":
+            delete_task(tasks)
+        elif choice == "5":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid option. Please try again.")
+
+if __name__ == "__main__":
+    main()
+
+TASK 1(GUI)
+
+GRAPHICAL USER INTERFACE
+
+import tkinter as tk
+from tkinter import messagebox
+import json
+
+FILE_NAME = "tasks.json"
+
+def load_tasks():
+    try:
+        with open(FILE_NAME, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
+
+def save_tasks(tasks):
+    with open(FILE_NAME, 'w') as file:
+        json.dump(tasks, file, indent=4)
+
+def add_task():
+    task_title = entry_task.get()
+    if task_title:
+        tasks.append({"title": task_title, "completed": False})
+        save_tasks(tasks)
+        update_task_listbox()
+        entry_task.delete(0, tk.END)
+    else:
+        messagebox.showwarning("Input Error", "Please enter a task title.")
+
+def update_task_listbox():
+    listbox_tasks.delete(0, tk.END)
+    for task in tasks:
+        status = "✔" if task['completed'] else "✘"
+        listbox_tasks.insert(tk.END, f"{task['title']} [{status}]")
+
+def mark_complete():
+    try:
+        index = listbox_tasks.curselection()[0]
+        tasks[index]['completed'] = True
+        save_tasks(tasks)
+        update_task_listbox()
+    except IndexError:
+        messagebox.showwarning("Selection Error", "Please select a task.")
+
+def delete_task():
+    try:
+        index = listbox_tasks.curselection()[0]
+        tasks.pop(index)
+        save_tasks(tasks)
+        update_task_listbox()
+    except IndexError:
+        messagebox.showwarning("Selection Error", "Please select a task.")
+
+# Initialize main window
+root = tk.Tk()
+root.title("To-Do List")
+
+tasks = load_tasks()
+
+# Task entry
+entry_task = tk.Entry(root, width=40)
+entry_task.pack(pady=10)
+
+# Add task button
+button_add = tk.Button(root, text="Add Task", width=42, command=add_task)
+button_add.pack(pady=5)
+
+# Task listbox
+listbox_tasks = tk.Listbox(root, height=10, width=42)
+listbox_tasks.pack(pady=10)
+update_task_listbox()
+
+# Buttons for task actions
+button_complete = tk.Button(root, text="Mark Complete", width=42, command=mark_complete)
+button_complete.pack(pady=5)
+
+button_delete = tk.Button(root, text="Delete Task", width=42, command=delete_task)
+button_delete.pack(pady=5)
+
+# Start the application
+root.mainloop()
+
+
+
 TASK 2
 
 print ("~~~~Simple Calculator~~~~")
@@ -19,6 +195,7 @@ elif choice == 4:
     print ("The division of given two numbers is:", num1 / num2)
 else:
     print ("Invalid Input")
+
 
 
 TASK 3
@@ -43,6 +220,7 @@ if __name__ == '__main__':
     random.shuffle(s)
     print("Your password is: ")
     print("".join(s[0:passwordlength]))
+
 
 
 TASK 4
@@ -125,6 +303,7 @@ while True:
 
 print ("Game over!")
 print ("Thanks for playing")
+
 
 
 TASK 5
